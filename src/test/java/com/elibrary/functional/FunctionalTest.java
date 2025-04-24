@@ -7,6 +7,7 @@ import static com.elibrary.testutils.TestUtils.yakshaAssert;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.AfterAll;
@@ -77,22 +78,22 @@ public class FunctionalTest {
 	}
 
 	@Test
-	public void testGetUserById() throws IOException {
+	public void testGetBookByPartialNameCaseInsensitive() throws IOException {
 		try {
-			Map<String, String> users = Map.of("user123", "John Doe");
-			String retrievedUser = users.get("user123");
-			yakshaAssert(currentTest(), retrievedUser != null, businessTestFile);
+			inventory.books.add(book); // Add a book to the inventory
+			// Search with a name in uppercase
+			yakshaAssert(currentTest(), inventory.getBookByName("MOCK").isPresent(), businessTestFile);
 		} catch (Exception ex) {
 			yakshaAssert(currentTest(), false, businessTestFile);
 		}
 	}
 
 	@Test
-	public void testGetUsers() throws IOException {
+	public void testGetAllBooks() throws IOException {
 		try {
-			Map<String, String> users = Map.of("user123", "John Doe");
-			Map<String, String> retrievedUsers = users;
-			yakshaAssert(currentTest(), retrievedUsers.size() == 1, businessTestFile);
+			inventory.books.add(book); // Add a book to the inventory
+			List<Book> allBooks = inventory.getAllBooks(); // Fetch all books
+			yakshaAssert(currentTest(), allBooks.size() == 1 && allBooks.contains(book), businessTestFile);
 		} catch (Exception ex) {
 			yakshaAssert(currentTest(), false, businessTestFile);
 		}
